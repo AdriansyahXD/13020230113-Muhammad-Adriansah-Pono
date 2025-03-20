@@ -1,0 +1,143 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Item {
+    String nama;
+    double harga;
+
+    Item(String nama, double harga) {
+        this.nama = nama;
+        this.harga = harga;
+    }
+}
+
+public class BelanjaanApp {
+    static ArrayList<Item> daftarBelanja = new ArrayList<>();
+    static Scanner input = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int pilihan;
+        do {
+            tampilkanMenu();
+            pilihan = bacaPilihanMenu();
+
+            switch (pilihan) {
+                case 1:
+                    tambahItem();
+                    break;
+                case 2:
+                    hapusItem();
+                    break;
+                case 3:
+                    tampilkanItem();
+                    break;
+                case 4:
+                    cariItem();
+                    break;
+                case 0:
+                    System.out.println("Keluar dari program...");
+                    break;
+                default:
+                    System.out.println("Pilihan tidak valid! Silakan pilih lagi.");
+            }
+        } while (pilihan != 0);
+    }
+
+    static void tampilkanMenu() {
+        System.out.println("\nMenu:");
+        System.out.println("1. Tambah Item Belanjaan");
+        System.out.println("2. Hapus Item Belanjaan");
+        System.out.println("3. Tampilkan Seluruh Item Belanjaan");
+        System.out.println("4. Cari Item Belanjaan");
+        System.out.println("0. Keluar dari program");
+        System.out.print("Pilih menu: ");
+    }
+
+    static int bacaPilihanMenu() {
+        int pilihan = -1;
+        while (true) {
+            if (input.hasNextInt()) {
+                pilihan = input.nextInt();
+                input.nextLine(); // Bersihkan buffer
+                break;
+            } else {
+                System.out.println("Input tidak valid! Harap masukkan angka.");
+                input.next(); // Buang input yang salah
+            }
+        }
+        return pilihan;
+    }
+
+    static void tambahItem() {
+        System.out.print("Masukkan Nama Item Belanjaan: ");
+        String nama = input.nextLine();
+
+        System.out.print("Masukkan Harga Item Belanjaan: ");
+        while (!input.hasNextDouble()) {
+            System.out.println("Harap masukkan angka untuk harga!");
+            input.next();
+        }
+        double harga = input.nextDouble();
+        input.nextLine(); // Bersihkan buffer
+
+        daftarBelanja.add(new Item(nama, harga));
+        System.out.println("Item Belanjaan Telah Ditambahkan!");
+    }
+
+    static void hapusItem() {
+        if (daftarBelanja.isEmpty()) {
+            System.out.println("Tidak ada item yang bisa dihapus.");
+            return;
+        }
+
+        System.out.print("Masukkan Nama Item Belanjaan yang Akan Dihapus: ");
+        String nama = input.nextLine();
+        boolean ditemukan = false;
+
+        for (int i = 0; i < daftarBelanja.size(); i++) {
+            if (daftarBelanja.get(i).nama.equalsIgnoreCase(nama)) {
+                daftarBelanja.remove(i);
+                System.out.println("Item Belanjaan Telah Dihapus!");
+                ditemukan = true;
+                break;
+            }
+        }
+
+        if (!ditemukan) {
+            System.out.println("Item tidak ditemukan, harap masukkan nama yang sesuai!");
+        }
+    }
+
+    static void tampilkanItem() {
+        if (daftarBelanja.isEmpty()) {
+            System.out.println("Belanjaan kosong!");
+        } else {
+            double total = 0;
+            System.out.println("Seluruh Item:");
+            System.out.println("===================");
+            for (Item item : daftarBelanja) {
+                System.out.println(item.nama + " - Rp" + item.harga);
+                total += item.harga;
+            }
+            System.out.println("Total Harga: Rp" + total);
+        }
+    }
+
+    static void cariItem() {
+        System.out.print("Masukkan Nama Item Belanjaan yang Dicari: ");
+        String nama = input.nextLine();
+        boolean ditemukan = false;
+
+        for (Item item : daftarBelanja) {
+            if (item.nama.equalsIgnoreCase(nama)) {
+                System.out.println(item.nama + " - Rp" + item.harga);
+                ditemukan = true;
+                break;
+            }
+        }
+
+        if (!ditemukan) {
+            System.out.println("Item Belanjaan Tidak Ditemukan!");
+        }
+    }
+}
